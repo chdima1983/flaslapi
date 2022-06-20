@@ -1,12 +1,18 @@
-from asyncio.proactor_events import _ProactorBasePipeTransport
+#from asyncio.proactor_events import _ProactorBasePipeTransport
+#from curses.ascii import DEL
+#from distutils.log import error
+#from http.client import OK
+#from mailbox import NotEmptyError
 import os
+#from unittest import result
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 import dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, insert, true, update
 from sqlalchemy_utils import database_exists, create_database
 from marshmallow import Schema, fields
+
 
 dotenv.load_dotenv()
 
@@ -43,7 +49,7 @@ class Student(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
-
+        
     def delete(self):
         db.session.delete(self)
         db.session.commit()
@@ -54,14 +60,16 @@ class StudentSchema(Schema):
     email = fields.Str()
     age = fields.Integer()
     cellphone = fields.Str()
+    
+@app.route('/')
+def get_root():
+    print('sending root')
+    return render_template('index.html')
 
-@app.route('/', methods = ['GET'])
-def home():
-    return '<p>Hello from students API!</p>', 200
-
-@app.route('/api', methods = ['GET'])
-def api_main():
-    return jsonify('Hello, World!'), 200
+@app.route('/api')
+def get_docs():
+    print('sending docs')
+    return render_template('swaggerui.html')
 
 @app.route('/api/students', methods=['GET'])
 def get_all_students():
@@ -91,8 +99,71 @@ def add_student():
     data = serializer.dump(new_student)
     return jsonify(data), 201
 
+# Endpoint DELETE
+
+@app.route('/api/students/delete/<int:id>', methods = ['DELETE'])
+def delete_student(id):
+    del_student = Student.query.get(id)
+    Student.delete(del_student)
+    db.session.commit()
+    return jsonify({'result':'Congrats successfully removed'}), 200
+
+# Endpoint PATCH
+
+@app.route('/api/students/modify/<int:id>', methods = ['PATCH'])
+def modify_student(id):
+    mod_student = Student.query.get(id)
+    print(request.json)
+    if 'name' in request.json:
+        mod_student.name = request.json['name']
+        s = print(mod_student.name)
+    if 'email' in request.json:
+        mod_student.email = request.json['email']
+    if 'age' in request.json:
+        mod_student.age = request.json['age']
+        ss = print(mod_student.age)
+    if 'cellphone' in request.json:
+        mod_student.cellphone = request.json['cellphone']
+    db.session.commit()
+    serializer = StudentSchema()
+    data = serializer.dump(mod_student)
+    return jsonify(data), 201    
+ 
+# Endpoint PUT  
+ 
+@app.route('/api/students/change/<int:id>', methods = ['PUT'])
+def change_student(id):
+    update_student = Student.query.get(id)
+    name = request.json['name']
+    email = request.json['email']
+    age = request.json['age']
+    cellphone = request.json['cellphone']
+    
+    update_student.name = name
+    update_student.email = email
+    update_student.age = age
+    update_student.cellphone = cellphone
+    
+    db.session.commit()
+    serializer = StudentSchema()
+    data = serializer.dump(update_student)
+    return jsonify(data), 201
+
+# GET health-check 200
+@app.route('/api/health-check/ok', methods=['GET'])
+def page_found():
+    return ('Ok'), 200
+
+# GET health-check 500
+
+@app.route('/api/health-check/bad', methods=['GET'])
+def page_not_found():
+    return ('Internal Server Error'), 500
+
 if __name__ == '__main__':
+    engine = create_engine(DB_URI, echo=True)
     if not database_exists(engine.url):
         create_database(engine.url)
     db.create_all()
-    app.run(debug=True)
+  
+    app.run(host="0.0.0.0", debug=True)

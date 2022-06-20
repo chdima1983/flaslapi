@@ -1,0 +1,146 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Students",
+    "version": "1.0.1"
+  },
+  "paths": {
+    "/students": {
+      "get": {
+        "description": "Get all students",
+        "responses": {
+          "200": {
+            "description": "Gets an array of students",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/students/get/id": {
+      "get": {
+        "description": "Get info of student",
+        "responses": {
+          "200": {
+            "description": "Gets info of student",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/students/add": {
+      "post": {
+        "description": "Add student",
+        "responses": {
+          "201": {
+            "description": "Add student name, e-mail, age, cellphone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/students/modify/id": {
+      "patch": {
+        "description": "Modify student",
+        "responses": {
+          "200": {
+            "description": "Modify student name, e-mail, age, cellphone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/students/change/id": {
+      "put": {
+        "description": "Modify student",
+        "responses": {
+          "200": {
+            "description": "Modify student name, e-mail, age, cellphone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/students/deleteStudent/id": {
+      "delete": {
+        "description": "Delete student",
+        "responses": {
+          "200": {
+            "description": "Delete student name, e-mail, age, cellphone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "e-mail": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer"
+          },
+          "cellphone": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
