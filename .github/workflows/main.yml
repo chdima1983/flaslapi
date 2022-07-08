@@ -18,12 +18,16 @@ jobs:
     steps:
 
       - name: Git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
       - name: flake8 Lint
         uses: py-actions/flake8@v2
+        with:
+          max-line-lenght: "100"
+          ignore: "W293,E1,E2"
+          path: "flask-api"
