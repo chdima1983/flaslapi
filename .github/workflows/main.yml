@@ -8,8 +8,8 @@ on:
 #  workflow_dispatch:
     
 
-#env:
-#  REGISTRY: koteikin/ci-cd-flask-app
+env:
+  REGISTRY: chdima/ci_cd_workshop
 
 jobs:
   lint:
@@ -52,10 +52,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#      - name: Build and push
-#        uses: docker/build-push-action@v3
-#        with:
-#          context: .
-#          push: true
-#          tags: |
-#            ${{ env.REGISTRY }}:${{ steps.commit_hash.outputs.commit_hash }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}:${{ steps.commit_hash.outputs.commit_hash }}
