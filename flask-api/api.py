@@ -166,4 +166,4 @@ if __name__ == '__main__':
         create_database(engine.url)
     db.create_all()
   
-    app.run(host="0.0.0.0", debug=True)
+app.run(host="0.0.0.0", debug=True)
