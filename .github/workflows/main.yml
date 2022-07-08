@@ -29,5 +29,5 @@ jobs:
         uses: py-actions/flake8@v2
         with:
           max-line-lenght: "100"
-          ignore: "W293,E1,E2"
+          ignore: "E501,E302,F841,W291,W293,E305,E1,E2"
           path: "flask-api"

@@ -1,15 +1,11 @@
-#from asyncio.proactor_events import _ProactorBasePipeTransport
-#from curses.ascii import DEL
-#from distutils.log import error
-#from http.client import OK
-#from mailbox import NotEmptyError
 import os
-#from unittest import result
 
-from flask import Flask, jsonify, request, redirect, render_template, session
+from flask import Flask, jsonify, request, render_template 
+#session, redirect
 from flask_sqlalchemy import SQLAlchemy
 import dotenv
-from sqlalchemy import create_engine, insert, true, update
+from sqlalchemy import create_engine
+#, insert, true, update
 from sqlalchemy_utils import database_exists, create_database
 from marshmallow import Schema, fields
 
