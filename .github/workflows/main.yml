@@ -69,7 +69,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['18.185.123.33', '52.28.20.69']
+        os: ['{{ env.HOST1 }}', '{{ env.HOST2 }}']
     runs-on: ubuntu-20.04
     steps:
       - name: Deploy to EC2 instanse via SSH action
@@ -84,9 +84,9 @@ jobs:
             # login docker
             docker login -u $DOCKER_USER -p $DOCKERHUB_TOKEN
 
-            docker stop flask-app
+            docker stop flask-api
 
-            docker rm flask-app
+            docker rm flask-api
 
             # Run a new container from a new image
             docker-compose up -d 
