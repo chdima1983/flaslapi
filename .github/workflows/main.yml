@@ -87,6 +87,13 @@ jobs:
             docker stop flask-api
 
             docker rm flask-api
+            docker stop db
+            docker rm db
+            # Run a new db 
+            docker run -d \
+            --env_file ./.env \
+            --name db \
+            --it mysql:5.7
 
             # Run a new container from a new image
             docker run -d \
