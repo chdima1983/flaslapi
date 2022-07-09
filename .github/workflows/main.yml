@@ -89,8 +89,5 @@ jobs:
             docker rm flask-app
 
             # Run a new container from a new image
-            docker-compose up -d \
-            --restart always \
-            -p 5000:5000 \
-            --name api.py \
+            docker-compose up -d 
             ${{ env.REGISTRY }}:${{ needs.build_and_push.outputs.commit_hash }}
