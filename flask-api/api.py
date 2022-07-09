@@ -125,7 +125,7 @@ def modify_student(id):
     return jsonify(data), 201    
  
 # Endpoint PUT  
- @app.route('/api/students/change/<int:id>', methods = ['PUT'])
+@app.route('/api/students/change/<int:id>', methods = ['PUT'])
 def change_student(id):
     update_student = Student.query.get(id)
     name = request.json['name']
