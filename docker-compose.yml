@@ -2,11 +2,12 @@ version: '2.1'
 services:
   app:
     container_name: full_app
-    restart: unless-stopped
-    build:
+    image: chdima/ci_cd_workshop:latest
+#    restart: unless-stopped
+#    build:
       # build the image from Dockerfile
-      context: .
-      dockerfile: Dockerfile
+#      context: .
+#      dockerfile: Dockerfile
     working_dir: /flask-api
     environment:
       # set database credentials from .env

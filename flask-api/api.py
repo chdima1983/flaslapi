@@ -17,7 +17,8 @@ db_pass = os.environ.get('DB_PASSWORD')
 db_hostname = os.environ.get('DB_HOSTNAME')
 db_name = os.environ.get('DB_NAME')
 
-DB_URI = 'mysql+pymysql://{db_username}:{db_password}@{db_host}/{database}'.format(db_username=db_user, db_password=db_pass, db_host=db_hostname, database=db_name)
+DB_URI = 'mysql+pymysql://{db_username}:{db_password}@{db_host}/{database}'.format(db_username=db_user,\
+    db_password=db_pass, db_host=db_hostname, database=db_name)
 
 engine = create_engine(DB_URI, echo=True)
 
@@ -96,7 +97,6 @@ def add_student():
     return jsonify(data), 201
 
 # Endpoint DELETE
-
 @app.route('/api/students/delete/<int:id>', methods = ['DELETE'])
 def delete_student(id):
     del_student = Student.query.get(id)
@@ -105,7 +105,6 @@ def delete_student(id):
     return jsonify({'result':'Congrats successfully removed'}), 200
 
 # Endpoint PATCH
-
 @app.route('/api/students/modify/<int:id>', methods = ['PATCH'])
 def modify_student(id):
     mod_student = Student.query.get(id)
@@ -126,20 +125,17 @@ def modify_student(id):
     return jsonify(data), 201    
  
 # Endpoint PUT  
- 
-@app.route('/api/students/change/<int:id>', methods = ['PUT'])
+ @app.route('/api/students/change/<int:id>', methods = ['PUT'])
 def change_student(id):
     update_student = Student.query.get(id)
     name = request.json['name']
     email = request.json['email']
     age = request.json['age']
     cellphone = request.json['cellphone']
-    
     update_student.name = name
     update_student.email = email
     update_student.age = age
     update_student.cellphone = cellphone
-    
     db.session.commit()
     serializer = StudentSchema()
     data = serializer.dump(update_student)
@@ -151,7 +147,6 @@ def page_found():
     return ('Ok'), 200
 
 # GET health-check 500
-
 @app.route('/api/health-check/bad', methods=['GET'])
 def page_not_found():
     return ('Internal Server Error'), 500
@@ -161,5 +156,4 @@ if __name__ == '__main__':
     if not database_exists(engine.url):
         create_database(engine.url)
     db.create_all()
-  
     app.run(host="0.0.0.0", debug=True)
