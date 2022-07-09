@@ -81,19 +81,19 @@ jobs:
           envs: ${{ secrets.DOCKER_USER }}, ${{ secrets.DOCKERHUB_TOKEN }}
           port: 22
           script: |
-            docker stop db
-            docker rm db
-            # Run a new db 
-            docker run -d \
-            --name db \
-            --it mysql:5.7
+
             # login docker
             docker login -u $DOCKER_USER -p $DOCKERHUB_TOKEN
-
+            docker stop db
             docker stop flask-api
-
+            docker rm db
             docker rm flask-api
-     
+            # RUN a new db
+            docker run -d \
+            --name db \
+            --env-file ./.env \
+            --restart always
+            mysql:5.7
             # Run a new container from a new image
             docker run -d \
             --restart always \
