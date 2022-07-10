@@ -88,10 +88,10 @@ jobs:
             # login docker
             docker login -u $DOCKER_USER -p $DOCKERHUB_TOKEN
 
-            docker stop flask-api
-            docker stop db
-            docker rm flask-api
-            docker rm db
+            docker stop full_app
+            docker stop full_db
+            docker rm full_app
+            docker rm full_db
             #Run new MySQL database
             docker run \
             --name full_db \
