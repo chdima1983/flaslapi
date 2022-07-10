@@ -111,16 +111,17 @@ jobs:
 
             # Run a new container from a new image
             docker run -d \
+            --network mynet \
+            -p 5000:5000 \
             --restart always \
             -e DB_HOSTNAME=${{ env.DB_HOSTNAME }} \
             -e DB_NAME=${{ env.DB_NAME }} \
             -e DB_USERNAME=${{ env.DB_USERNAME }} \
             -e DB_PASSWORD=${{ env.DB_PASSWORD }} \
-            --network mynet \
-            -p 5000:5000 \
+
             --name full_app \
             ${{ env.REGISTRY }}:${{ needs.build_and_push.outputs.commit_hash }}
-
+            docker network connect mynet full_app
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
