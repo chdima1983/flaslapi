@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 RUN apt-get update -y && apt-get install -y python3-pip && apt-get install -y python && apt-get install -y python3
 RUN apt-get install -y g++ && apt-get install -y python3-dev && apt-get install -y libffi-dev
-#    apk add --no-cache --update python3 && \
+#    apk add --no-cache --update python3 && \ 
 RUN /bin/bash -c "pip3 install --upgrade pip setuptools"
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
