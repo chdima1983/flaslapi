@@ -96,7 +96,7 @@ jobs:
             docker network rm mynet
 
             # Create network
-            docker network create -d bridge mynet
+            docker network create mynet --subnet=172.20.18.0/24
             #Run new MySQL database
             docker run \
             --name full_db \
