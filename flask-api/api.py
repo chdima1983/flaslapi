@@ -1,8 +1,3 @@
-#from asyncio.proactor_events import _ProactorBasePipeTransport
-#from curses.ascii import DEL
-#from distutils.log import error
-#from http.client import OK
-#from mailbox import NotEmptyError
 import os
 #from unittest import result
 
@@ -110,24 +105,24 @@ def delete_student(id):
 
 # Endpoint PATCH
 
-@app.route('/api/students/modify/<int:id>', methods = ['PATCH'])
-def modify_student(id):
-    mod_student = Student.query.get(id)
-    print(request.json)
-    if 'name' in request.json:
-        mod_student.name = request.json['name']
-        s = print(mod_student.name)
-    if 'email' in request.json:
-        mod_student.email = request.json['email']
-    if 'age' in request.json:
-        mod_student.age = request.json['age']
-        ss = print(mod_student.age)
-    if 'cellphone' in request.json:
-        mod_student.cellphone = request.json['cellphone']
-    db.session.commit()
-    serializer = StudentSchema()
-    data = serializer.dump(mod_student)
-    return jsonify(data), 201    
+#@app.route('/api/students/modify/<int:id>', methods = ['PATCH'])
+#def modify_student(id):
+#    mod_student = Student.query.get(id)
+#    print(request.json)
+#    if 'name' in request.json:
+#        mod_student.name = request.json['name']
+#        s = print(mod_student.name)
+#    if 'email' in request.json:
+#        mod_student.email = request.json['email']
+#    if 'age' in request.json:
+#        mod_student.age = request.json['age']
+#        ss = print(mod_student.age)
+#    if 'cellphone' in request.json:
+#        mod_student.cellphone = request.json['cellphone']
+#    db.session.commit()
+#    serializer = StudentSchema()
+#    data = serializer.dump(mod_student)
+#    return jsonify(data), 201    
  
 # Endpoint PUT  
  

@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.6'
 services:
   app:
     container_name: full_app
@@ -19,9 +19,9 @@ services:
     ports:
       # bind on our 5000 port 
       - "5000:5000"
-    depends_on:
-      db:
-        condition: service_healthy
+#    depends_on:
+#      db:
+#        condition: service_healthy
 
   db:
     container_name: full_db
@@ -39,11 +39,11 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-    healthcheck:
-      test: "/etc/init.d/mysql status"
-      interval: 3s
-      timeout: 45s
-      retries: 5
+#    healthcheck:
+#      test: "/etc/init.d/mysql status"
+#      interval: 3s
+#      timeout: 45s
+#      retries: 5
 
 volumes:
   db:
