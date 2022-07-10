@@ -95,7 +95,7 @@ jobs:
             docker rm full_db
 
             # Create network
-            docker network create mynet
+            docker network create -d bridge --subnet 172.20.18.0/24 mynet
             #Run new MySQL database
             docker run \
             --name full_db \
@@ -106,11 +106,13 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=${{ env.DB_PASSWORD }} \
             -v db:/var/lib/mysql \
             --network mynet \
+            --ip 172.20.18.5 \
             -d mysql:5.7
 
             # Run a new container from a new image
             docker run -d \
             --network mynet \
+            --ip 172.20.18.6 \
             -p 5000:5000 \
             -e DB_HOSTNAME=${{ env.DB_HOSTNAME }} \
             -e DB_NAME=${{ env.DB_NAME }} \
