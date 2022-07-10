@@ -97,7 +97,7 @@ jobs:
             # Create network
             docker network create mynet
             #Run new MySQL database
-            docker run -d \
+            docker run \
             --name full_db \
             -e MYSQL_ROOT_HOST=${{ env.DB_HOSTNAME }} \
             -e MYSQL_USER=${{ env.DB_USERNAME }} \
@@ -106,12 +106,12 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=${{ env.DB_PASSWORD }} \
             -v db:/var/lib/mysql \
             --network mynet \
-            mysql:5.7
+            -d mysql:5.7
 
             # Run a new container from a new image
-            docker run -dp 5000:5000 \
+            docker run -d \
             --network mynet \
-
+            -p 5000:5000 \
             -e DB_HOSTNAME=${{ env.DB_HOSTNAME }} \
             -e DB_NAME=${{ env.DB_NAME }} \
             -e DB_USERNAME=${{ env.DB_USERNAME }} \
