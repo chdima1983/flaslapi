@@ -53,11 +53,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push
-        #uses: docker/build-push-action@v3
-        uses: sudo-bot/action-docker-compose@latest
+        uses: docker/build-push-action@v3
         with:
           context: .
-          cli-args: "up"
           push: true
           tags: |
             ${{ env.REGISTRY }}:${{ steps.commit_hash.outputs.commit_hash }}
@@ -68,6 +66,10 @@ jobs:
       HOST1: 18.185.123.33
       HOST2: 52.28.20.69
       USERNAME: ubuntu
+      DB_HOSTNAME: db
+      DB_USERNAME: devops
+      DB_PASSWORD: devops
+      DB_NAME: student
     strategy:
       fail-fast: false
       matrix:
@@ -82,18 +84,31 @@ jobs:
           key: ${{ secrets.ID_RSA }}
           envs: ${{ secrets.DOCKER_USER }}, ${{ secrets.DOCKERHUB_TOKEN }}
           port: 22
-
           script: |
-
             # login docker
             docker login -u $DOCKER_USER -p $DOCKERHUB_TOKEN
-            docker stop db
+
             docker stop flask-api
-            docker start db
+            docker stop db
             docker rm flask-api
+            docker rm db
 
+            docker run \
+            --name db \
+            -e MYSQL_ROOT_HOST=${{env.DB_HOSTNAME}} \
+            -e MYSQL_USER=${{env.DB_USERNAME}} \
+            -e MYSQL_PASSWORD=${{env.DB_PASSWORD}} \
+            -e MYSQL_DATABASE=${{env.DB_NAME}} \
+            -e MYSQL_ROOT_PASSWORD=${{env.DB_PASSWORD} \
+            -v $HOME/db:/var/lib/mysql \
+            -d mysql:5.7
             # Run a new container from a new image
-            docker-compose up -d \
-
+            docker run -d \
+            --restart always \
+            -e DB_HOSTNAME=${{env.DB_HOSTNAME}} \
+            -e DB_NAME=${{env.DB_NAME}} \
+            -e DB_USERNAME=${{env.DB_USERNAME}} \
+            -e DB_PASSWORD=${{env.DB_PASSWORD}} \
+            -p 5000:5000 \
+            --name flask-api \
             ${{ env.REGISTRY }}:${{ needs.build_and_push.outputs.commit_hash }}
-   
