@@ -121,7 +121,7 @@ jobs:
 
             --name full_app \
             ${{ env.REGISTRY }}:${{ needs.build_and_push.outputs.commit_hash }}
-            docker network connect mynet full_app
+            
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
