@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["{{ env.HOST1 }}", '52.28.20.69']
+        os: ["$env.HOST1", '52.28.20.69']
     #runs-on: ${{ matrix.os }}
     runs-on: ubuntu-20.04
     steps:
