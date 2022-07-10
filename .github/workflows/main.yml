@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['3.72.105.110', '52.28.20.69']
+        os: ['3.120.14.204', '52.28.20.69']
     #runs-on: ${{ matrix.os }}
     runs-on: ubuntu-20.04
     steps:
@@ -99,7 +99,7 @@ jobs:
             docker network create mynet --subnet=172.20.18.0/24
             #Run new MySQL database
             docker run \
-            --name full_db \
+            --name db \
             -e MYSQL_ROOT_HOST=${{ env.DB_HOSTNAME }} \
             -e MYSQL_USER=${{ env.DB_USERNAME }} \
             -e MYSQL_PASSWORD=${{ env.DB_PASSWORD }} \
@@ -124,7 +124,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v1
       - name: Build and Run Tests
-        run: curl -v http://3.72.105.110:5000
+        run: curl -v http://3.120.14.204:5000
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
