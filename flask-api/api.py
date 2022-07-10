@@ -1,11 +1,15 @@
+#from asyncio.proactor_events import _ProactorBasePipeTransport
+#from curses.ascii import DEL
+#from distutils.log import error
+#from http.client import OK
+#from mailbox import NotEmptyError
 import os
+#from unittest import result
 
-from flask import Flask, jsonify, request, render_template 
-#session, redirect
+from flask import Flask, jsonify, request, redirect, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 import dotenv
-from sqlalchemy import create_engine
-#, insert, true, update
+from sqlalchemy import create_engine, insert, true, update
 from sqlalchemy_utils import database_exists, create_database
 from marshmallow import Schema, fields
 
@@ -96,6 +100,7 @@ def add_student():
     return jsonify(data), 201
 
 # Endpoint DELETE
+
 @app.route('/api/students/delete/<int:id>', methods = ['DELETE'])
 def delete_student(id):
     del_student = Student.query.get(id)
@@ -104,6 +109,7 @@ def delete_student(id):
     return jsonify({'result':'Congrats successfully removed'}), 200
 
 # Endpoint PATCH
+
 @app.route('/api/students/modify/<int:id>', methods = ['PATCH'])
 def modify_student(id):
     mod_student = Student.query.get(id)
@@ -124,6 +130,7 @@ def modify_student(id):
     return jsonify(data), 201    
  
 # Endpoint PUT  
+ 
 @app.route('/api/students/change/<int:id>', methods = ['PUT'])
 def change_student(id):
     update_student = Student.query.get(id)
@@ -131,10 +138,12 @@ def change_student(id):
     email = request.json['email']
     age = request.json['age']
     cellphone = request.json['cellphone']
+    
     update_student.name = name
     update_student.email = email
     update_student.age = age
     update_student.cellphone = cellphone
+    
     db.session.commit()
     serializer = StudentSchema()
     data = serializer.dump(update_student)
@@ -146,6 +155,7 @@ def page_found():
     return ('Ok'), 200
 
 # GET health-check 500
+
 @app.route('/api/health-check/bad', methods=['GET'])
 def page_not_found():
     return ('Internal Server Error'), 500
@@ -155,4 +165,5 @@ if __name__ == '__main__':
     if not database_exists(engine.url):
         create_database(engine.url)
     db.create_all()
+  
     app.run(host="0.0.0.0", debug=True)
