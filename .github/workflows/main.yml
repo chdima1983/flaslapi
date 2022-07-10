@@ -53,9 +53,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push
-        uses: docker/build-push-action@v3
+        #uses: docker/build-push-action@v3
+        uses: sudo-bot/action-docker-compose@latest
         with:
           context: .
+          cli-args: "up"
           push: true
           tags: |
             ${{ env.REGISTRY }}:${{ steps.commit_hash.outputs.commit_hash }}
@@ -69,7 +71,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['18.185.123.33', '52.28.20.69']
+        os: ['$HOST1', '52.28.20.69']
     runs-on: ubuntu-20.04
     steps:
       - name: Deploy to EC2 instanse via SSH action
@@ -80,7 +82,7 @@ jobs:
           key: ${{ secrets.ID_RSA }}
           envs: ${{ secrets.DOCKER_USER }}, ${{ secrets.DOCKERHUB_TOKEN }}
           port: 22
-          
+
           script: |
 
             # login docker
