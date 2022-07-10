@@ -63,7 +63,7 @@ jobs:
   deploy:
     needs: build_and_push
     env:
-      HOST1: 18.185.123.33
+      HOST1: 3.72.105.110
       HOST2: 52.28.20.69
       USERNAME: ubuntu
       DB_HOSTNAME: db
@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['18.185.123.33', '52.28.20.69']
+        os: ['3.72.105.110', '52.28.20.69']
     runs-on: ubuntu-20.04
     steps:
       - name: Deploy to EC2 instanse via SSH action
