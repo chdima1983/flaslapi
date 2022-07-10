@@ -79,7 +79,7 @@ jobs:
       - name: Deploy to EC2 instanse via SSH action
         uses: appleboy/ssh-action@v0.1.3
         with:
-          host: ${{ matrix.os }}
+#          host: ${{ matrix.os }}
           username: ${{ env.USERNAME }}
           key: ${{ secrets.ID_RSA }}
           envs: ${{ secrets.DOCKER_USER }}, ${{ secrets.DOCKERHUB_TOKEN }}
@@ -92,6 +92,7 @@ jobs:
             docker stop full_db
             docker rm full_app
             docker rm full_db
+
             #Run new MySQL database
             docker run \
             --name full_db \
@@ -102,6 +103,7 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=${{ env.DB_PASSWORD }} \
             -v $HOME/db:/var/lib/mysql \
             -d mysql:5.7
+            
             # Run a new container from a new image
             docker run -d \
             --restart always \
