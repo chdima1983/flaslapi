@@ -93,9 +93,10 @@ jobs:
             docker stop full_db
             docker rm full_app
             docker rm full_db
+            docker network rm mynet
 
             # Create network
-            docker network create -d bridge --subnet 172.20.18.0/24 my-net
+            docker network create -d bridge --subnet 172.20.18.0/24 mynet
             #Run new MySQL database
             docker run \
             --name full_db \
@@ -104,23 +105,22 @@ jobs:
             -e MYSQL_PASSWORD=${{ env.DB_PASSWORD }} \
             -e MYSQL_DATABASE=${{ env.DB_NAME }} \
             -e MYSQL_ROOT_PASSWORD=${{ env.DB_PASSWORD }} \
-            -v db:/var/lib/mysql \
-            --network my-net \
-
+            -v $HOME/db:/var/lib/mysql \
+            --network mynet \
             -d mysql:5.7
 
             # Run a new container from a new image
             docker run -d \
-            --network my-net \
-            -p 5000:5000 \
+            --restart always \
             -e DB_HOSTNAME=${{ env.DB_HOSTNAME }} \
             -e DB_NAME=${{ env.DB_NAME }} \
             -e DB_USERNAME=${{ env.DB_USERNAME }} \
             -e DB_PASSWORD=${{ env.DB_PASSWORD }} \
+            --network mynet \
+            -p 5000:5000 \
             --name full_app \
-            --restart always \
             ${{ env.REGISTRY }}:${{ needs.build_and_push.outputs.commit_hash }}
- 
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
