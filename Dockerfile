@@ -5,7 +5,9 @@ RUN apt-get install -y g++ && apt-get install -y python3-dev && apt-get install 
 RUN /bin/bash -c "pip3 install --upgrade pip setuptools"
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /flask-api
 #COPY /flask-api /flask-api
+ADD /flask-api/ /flask-api/
 ENTRYPOINT ["python3"]
 CMD ["api.py"]
 
