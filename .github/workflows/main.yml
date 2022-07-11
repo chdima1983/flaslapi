@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+#wokflow on another folk
+#  workflow_dispatch:
+    
 
 env:
   REGISTRY: chdima/ci_cd_workshop
@@ -64,7 +67,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['3.120.209.240', '3.66.110.139']
+        os: ['3.120.209.240', '18.184.105.215']
     runs-on: ubuntu-20.04
     steps:
       - name: Deploy to EC2 instanse via SSH action
@@ -78,33 +81,32 @@ jobs:
           script: |
             # login docker
             docker login -u $DOCKER_USER -p $DOCKERHUB_TOKEN
-
             docker stop full_app
             docker stop full_db
             docker rm full_app
             docker rm full_db
             docker network rm mynet
-
             # Create network
             docker network create mynet --subnet=172.20.18.0/24
             #Run new MySQL database
             docker run \
             --name db \
-            -e MYSQL_ROOT_HOST=${{ secret.DB_HOSTNAME }} \
-            -e MYSQL_USER=${{ secret.DB_USERNAME }} \
-            -e MYSQL_PASSWORD=${{ secret.DB_PASSWORD }} \
-            -e MYSQL_DATABASE=${{ secret.DB_NAME }} \
-            -e MYSQL_ROOT_PASSWORD=${{ secret.DB_PASSWORD }} \
+            -e MYSQL_ROOT_HOST=${{ secrets.DB_HOSTNAME }} \
+            -e MYSQL_USER=${{ secrets.DB_USERNAME }} \
+            -e MYSQL_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e MYSQL_DATABASE=${{ secrets.DB_NAME }} \
+            -e MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }} \
             -v $HOME/db:/var/lib/mysql \
+            --network mynet \
             -d mysql:5.7
-
             # Run a new container from a new image
             docker run -d \
             --restart always \
-            -e DB_HOSTNAME=${{ secret.DB_HOSTNAME }} \
-            -e DB_NAME=${{ secret.DB_NAME }} \
-            -e DB_USERNAME=${{ secret.DB_USERNAME }} \
-            -e DB_PASSWORD=${{ secret.DB_PASSWORD }} \
+            -e DB_HOSTNAME=${{ secrets.DB_HOSTNAME }} \
+            -e DB_NAME=${{ secrets.DB_NAME }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            --network mynet \
             -p 5000:5000 \
             --name full_app \
             ${{ env.REGISTRY }}:${{ needs.build_and_push.outputs.commit_hash }}
@@ -116,7 +118,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v1
       - name: Build and Run Tests
-        run: curl -v http://3.120.209.240:5000 && curl -v http://3.66.110.139:5000
+        run: curl -v http://3.120.209.240:5000 && curl -v http://18.184.105.215:5000
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
