@@ -63,8 +63,7 @@ jobs:
   deploy:
     needs: build_and_push
     env:
-      HOST1: 3.72.105.110
-      HOST2: 52.28.20.69
+# For educational purposes, we set variables here, for real ones we throw them into github secret
       USERNAME: ubuntu
       DB_HOSTNAME: db
       DB_USERNAME: devops
@@ -122,7 +121,7 @@ jobs:
             ${{ env.REGISTRY }}:${{ needs.build_and_push.outputs.commit_hash }}
       
   Report:
-    needs: build_and_push
+    needs: deploy
     runs-on: ubuntu-20.04
     steps:    
       
