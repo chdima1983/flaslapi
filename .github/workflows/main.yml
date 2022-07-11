@@ -72,7 +72,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['18.156.34.29', '54.93.32.227']
+        os: ['18.156.34.29', '18.184.105.215']
     #runs-on: ${{ matrix.os }}
     runs-on: ubuntu-20.04
     steps:
