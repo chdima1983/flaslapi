@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['18.197.129.75', '54.93.32.227']
+        os: ['18.156.34.29', '54.93.32.227']
     #runs-on: ${{ matrix.os }}
     runs-on: ubuntu-20.04
     steps:
@@ -124,7 +124,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v1
       - name: Build and Run Tests
-        run: curl -v http://18.197.129.75:5000 && curl -v http://54.93.32.227:5000
+        run: curl -v http://18.156.34.29:5000 && curl -v http://54.93.32.227:5000
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
