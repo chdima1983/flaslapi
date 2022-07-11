@@ -63,7 +63,7 @@ jobs:
   deploy:
     needs: build_and_push
     env:
-
+#Here are the variables for learning purposes, they need to be uploaded to github secrets
       USERNAME: ubuntu
       DB_HOSTNAME: db
       DB_USERNAME: devops
