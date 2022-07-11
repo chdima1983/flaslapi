@@ -4,10 +4,7 @@ on:
   push:
     branches:
       - master
-#wokflow on another folk
-#  workflow_dispatch:
     
-
 env:
   REGISTRY: chdima/ci_cd_workshop
 
