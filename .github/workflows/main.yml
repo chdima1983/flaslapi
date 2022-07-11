@@ -120,11 +120,14 @@ jobs:
             -p 5000:5000 \
             --name full_app \
             ${{ env.REGISTRY }}:${{ needs.build_and_push.outputs.commit_hash }}
-
-      - name: Checkout Code
-        uses: actions/checkout@v1
-      - name: Build and Run Tests
-        run: mvn test --batch-mode --fail-at-end
-      - name: Publish Test Report
-        if: ${{ always() }}
-        uses: scacap/action-surefire-report@v1
+      
+  Report:
+    needs: build_and_push
+    runs-on: ubuntu-20.04
+    steps:    
+      
+      - uses: actions/checkout@master
+      - name: Generate
+        uses: skx/github-action-build@master
+        with:
+          builder: .github/build
