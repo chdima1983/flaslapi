@@ -6,15 +6,15 @@ This repo contains code that
 - Attaches a persistent volume to it, so the data remains contained if pods are restarting
 - Deploys have 3 replicas Flask API to add, delete, modify, patch and put students (name, email, age, cellphone) in the MySQL database
 
-# Kubernetes_homework
+## Kubernetes_homework
 
 
-# Getting started
+### Getting started
 
 1. Clone the repository
 2. Pull the mysql image from Dockerhub: Docker pull mysql:8
 
-# Deployments
+### Deployments
 
 1. Add the secrets to your kubernetes cluster: kubectl apply -f ./Kubernetes/mysql-secret.yaml
 2. Create the MySQL deployment: kubectl apply -f Kubernetes/mysql.yaml
