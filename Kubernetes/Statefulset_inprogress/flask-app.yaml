@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask
+  labels:
+    app: flask
+spec:
+  ports:
+    - port: 5000
+  selector:
+    app: flask
+    tier: frontend
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: flask
+  labels:
+    app: flask
+spec:
+  serviceName: flask
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask
+      tier: frontend
+#  strategy:
+#    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: flask
+        tier: frontend
+    spec:
+      containers:
+      - image: chdima/kuber
+        name: flask
+        env:
+          - name: FLASK_APP
+            value: api.py
+          - name: FLASK_ENV
+            value: development
+          - name: DB_USERNAME
+            value: devops
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: mysql-password
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: mysql-db-name
+          - name: DB_HOSTNAME
+            value: flask-mysql
+        ports:
+        - containerPort: 5000
+          name: flask
+        volumeMounts:
+        - name: flask-persistent-storage
+          mountPath: /var/www/html
+
+        resources:
+          requests:
+            memory: 300Mi
+            cpu: 400m
+          limits:
+            memory: 400Mi
+            cpu: 500m
+      restartPolicy: Always
+ 
+  volumeClaimTemplates:
+    - metadata:
+        name: flask-persistent-storage
+      spec:
+        storageClassName: localstorage
+        accessModes: ["ReadWriteOnce"]
+        resources:
+         requests:
+          storage: 5Gi
+        selector:
+         matchLabels:
+          type: local

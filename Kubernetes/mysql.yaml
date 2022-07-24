@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-mysql
+  labels:
+    app: flask
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: flask
+    tier: mysql
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  labels:
+    app: flask
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-mysql
+  labels:
+    app: flask
+spec:
+  selector:
+    matchLabels:
+      app: flask
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: flask
+        tier: mysql
+    spec:
+      containers:
+      - image: mysql:8
+        name: mysql
+        env:
+          - name: MYSQL_USER
+            value: devops
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: mysql-password
+
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: mysql-db-name
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:              
+              secretKeyRef:
+                name: mysql-secret
+                key: mysql-root-password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
